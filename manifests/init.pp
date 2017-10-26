@@ -1,12 +1,12 @@
-# == Class: kitchen_template::init
+# == Class: bastion_host::init
 #
-class kitchen_template{
+class bastion_host{
 
   ## ressource ordering
-  class { '::kitchen_template2':} ->
-  class { '::kitchen_template::profiles::lighttpd':}
+  class { '::bastion_host2':} ->
+  class { '::bastion_host::profiles::lighttpd':}
 
   ## needed ressources
-  include ::kitchen_template2
-  include ::kitchen_template::profiles::lighttpd
+  include ::bastion_host2
+  include ::bastion_host::profiles::lighttpd
 }

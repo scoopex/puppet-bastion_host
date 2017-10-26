@@ -1,7 +1,7 @@
 Overview
 --------
 
-This project based on https://github.com/scoopex/puppet-kitchen_template
+This project based on https://github.com/scoopex/puppet-bastion_host
 
 This puppet project template provides the following aspects:
 
@@ -23,8 +23,8 @@ Installation of the test environment
      ```
   * Clone the repo
     ```
-    git clone https://github.com/scoopex/puppet-kitchen_template.git
-    cd puppet-kitchen_template
+    git clone https://github.com/scoopex/puppet-bastion_host.git
+    cd puppet-bastion_host
     ```
   * Installation of RVM
      * Follow the offical installation procedure at https://rvm.io/, i.e.:
@@ -58,11 +58,11 @@ Installation of the test environment
        "test-kitchen": Serverspec Test mit Vagrant/Virtualbox/Docker
        ```
        exec bash
-       cd ..; cd puppet-kitchen_template
+       cd ..; cd puppet-bastion_host
        # Frägt nach Sudo Passwort: Installiert libyaml-dev, libsqlite3-dev, libgdbm-dev, libncurses5-dev, bison, libreadline6-dev
        rvm install ruby-2.4
        # Now the automatic invocation of bundler should install all the missing gems
-       cd ..; cd puppet-kitchen_template
+       cd ..; cd puppet-bastion_host
        ```
 
 Develop and test puppet code
@@ -70,7 +70,7 @@ Develop and test puppet code
 
  * Change to the directory
    ```
-   cd puppet-kitchen_template
+   cd puppet-bastion_host
    ```
  * Deploy a test system and login to the system for debugging purposes
    ```

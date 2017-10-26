@@ -1,6 +1,6 @@
-# == Class: kitchen_template::profiles::lighttpd
+# == Class: bastion_host::profiles::lighttpd
 #
-class kitchen_template::profiles::lighttpd(
+class bastion_host::profiles::lighttpd(
 	$installed,
   $message = "WELCOME"
 ){

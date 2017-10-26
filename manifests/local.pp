@@ -2,12 +2,12 @@
 
 ##################################################
 #### MOCK CLASSES WHICH SHOULD NOT TESTED HERE
-class kitchen_template2(
+class bastion_host2(
   Hash $config = {},
 ) {
-  notice( 'mocked class ==> kitchen_template::foobar' )
+  notice( 'mocked class ==> bastion_host::foobar' )
 }
 
 # INCLUDE THE CLASS
-include ::kitchen_template
+include ::bastion_host
 

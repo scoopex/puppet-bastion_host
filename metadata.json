@@ -1,12 +1,12 @@
 {
-  "name": "kitchen_template",
+  "name": "bastion_host",
   "version": "0.1.0",
   "author": "Marc Schoechlin",
   "summary": "A template for testing puppet code in kitchen",
   "license": "BSD 2-Clause License",
-  "source": "https://github.com/scoopex/puppet-kitchen_template",
+  "source": "https://github.com/scoopex/puppet-bastion_host",
   "project_page": null,
   "dependencies": [
   ],
-  "issues_url": "https://github.com/scoopex/puppet-kitchen_template/issues"
+  "issues_url": "https://github.com/scoopex/puppet-bastion_host/issues"
 }
