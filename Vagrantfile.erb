@@ -81,6 +81,10 @@ Vagrant.configure("2") do |c|
     ln -s /opt/puppetlabs/bin/puppet /usr/bin/puppet
     mkdir -pv /opt/chef/embedded/bin/
     ln -snf /usr/bin/ruby /opt/chef/embedded/bin/
+    useradd -m testuser -s /usr/local/bin/auditshell
+    su - testuser -c "/usr/bin/ssh-keygen -f ~testuser/.ssh/id_rsa -b 4096 -t rsa -q -N '' -C 'foo@bar.de'"
+    su - testuser -c "cp  ~testuser/.ssh/id_rsa.pub ~testuser/.ssh/authorized_keys"
+    passwd --unlock testuser
     EOF
  end
 

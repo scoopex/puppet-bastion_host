@@ -1,0 +1,47 @@
+#!/bin/bash
+
+cd /var/log/auditshell
+if [ "$?" != "0" ];then
+   echo "ERROR: unable to enter dir /var/log/auditshell"
+   exit 1
+fi
+
+list_sessions(){
+  for dir in *;
+  do
+    if ( ! [ -d "$dir" ] );then
+       continue
+    fi 
+    if ( ! ( ls -1 $NAME/timing.*  $NAME/typescript.* &>/dev/null ) );then
+       echo "$dir"
+    fi 
+  done
+}
+
+replay_sesion(){
+     local NAME="$1"
+     if ( ! (echo "$NAME"|grep -P "^[0-9a-zA-Z_\-][0-9a-zA-Z_\-\.]*$"));then
+        echo "ERROR: NOT ALLOWED CHARACTERS"
+        exit 1
+     fi
+     if ( [ -f "$NAME/timing.${NAME}" ] && [ -f "$NAME/typescript.${NAME}" ] );then
+        clear
+        echo "STARTING REPLAY"
+        scriptreplay -t "$NAME/timing.${NAME}"  "$NAME/typescript.${NAME}"
+        echo "REPLAY COMPLETE"
+     fi
+}
+ACTION="$1"
+SESSION="$2"
+
+case "$ACTION" in
+  list)
+        list_sessions
+        ;;
+  replay)
+        replay_sesion "$SESSION"
+        ;;
+  *)
+        echo "Usage: $0 {list|replay <session>"
+        exit 1
+esac
