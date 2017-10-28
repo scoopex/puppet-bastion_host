@@ -1,10 +1,5 @@
 #!/bin/bash
 
-cd /var/log/auditshell
-if [ "$?" != "0" ];then
-   echo "ERROR: unable to enter dir /var/log/auditshell"
-   exit 1
-fi
 
 #################################################################################
 ####
@@ -25,6 +20,7 @@ get_glob(){
 }
 
 list_sessions(){
+  shopt -s nullglob
   for dir in $(get_glob);
   do
     if ( ! [ -d "$dir" ] );then
@@ -32,8 +28,10 @@ list_sessions(){
     fi 
     if ( ! ( ls -1 $NAME/timing.*  $NAME/typescript.* &>/dev/null ) );then
        echo "$dir"
+       break
     fi 
   done
+  shopt -u nullglob
 }
 
 show_session(){
@@ -42,10 +40,12 @@ show_session(){
         echo "ERROR: NOT ALLOWED CHARACTERS"
         exit 1
      fi
+     shopt -s nullglob
      if ( ! ls -1 $(get_glob)|grep -q "$NAME" );then
         echo "ERROR: NOT ALLOWED, YOU ARE NOT MEMBER OF THE >>auditshell<< GROUP"
         exit 1
      fi
+     shopt -u nullglob
      if ( [ -f "$NAME/timing.${NAME}" ] && [ -f "$NAME/typescript.${NAME}" ] );then
         clear
         echo "STARTING REPLAY"
@@ -60,6 +60,12 @@ show_session(){
 
 ACTION="$1"
 SESSION="$2"
+
+cd /var/log/auditshell
+if [ "$?" != "0" ];then
+   echo "ERROR: unable to enter dir /var/log/auditshell"
+   exit 1
+fi
 
 case "$ACTION" in
   list)
