@@ -6,8 +6,26 @@ if [ "$?" != "0" ];then
    exit 1
 fi
 
+#################################################################################
+####
+#### HELPERS
+
+get_glob(){
+   GLOB="????-??-??_??-??-??.$(whoami).*"
+   for group in $(groups);
+   do
+      if [ "$group" = "auditshell" ];then
+         GLOB="????-??-??_??-??-??.*.*"
+      fi
+   done
+   if [ "$(whoami)" = "root" ];then
+         GLOB="????-??-??_??-??-??.*.*"
+   fi
+   echo "$GLOB"
+}
+
 list_sessions(){
-  for dir in *;
+  for dir in $(get_glob);
   do
     if ( ! [ -d "$dir" ] );then
        continue
@@ -18,10 +36,14 @@ list_sessions(){
   done
 }
 
-replay_sesion(){
+show_session(){
      local NAME="$1"
      if ( ! (echo "$NAME"|grep -P "^[0-9a-zA-Z_\-][0-9a-zA-Z_\-\.]*$"));then
         echo "ERROR: NOT ALLOWED CHARACTERS"
+        exit 1
+     fi
+     if ( ! ls -1 $(get_glob)|grep -q "$NAME" );then
+        echo "ERROR: NOT ALLOWED, YOU ARE NOT MEMBER OF THE >>auditshell<< GROUP"
         exit 1
      fi
      if ( [ -f "$NAME/timing.${NAME}" ] && [ -f "$NAME/typescript.${NAME}" ] );then
@@ -31,6 +53,11 @@ replay_sesion(){
         echo "REPLAY COMPLETE"
      fi
 }
+
+#################################################################################
+####
+#### MAIN
+
 ACTION="$1"
 SESSION="$2"
 
@@ -38,10 +65,10 @@ case "$ACTION" in
   list)
         list_sessions
         ;;
-  replay)
-        replay_sesion "$SESSION"
+  show)
+        show_session "$SESSION"
         ;;
   *)
-        echo "Usage: $0 {list|replay <session>"
+        echo "Usage: $0 {list|replay <session>}"
         exit 1
 esac
