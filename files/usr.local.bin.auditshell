@@ -9,7 +9,7 @@
    /**           lrwix,
 
    /bin/bash    cx,
-   /usr/local/bin/auditshell-sessions    cx,
+   /usr/local/bin/auditshell-sessions    Px,
 
    profile /bin/bash {
      #include <abstractions/base>
@@ -40,15 +40,4 @@
 #       peer=(name="org.freedesktop.resolve1"),
 
      }
-
-
-   profile /usr/local/bin/auditshell-sessions {
-     #include <abstractions/base>
-     #include <abstractions/bash>
-     /**           lrwix,
-     /var/log/auditshell/  lrix,
-     /var/log/auditshell/**  lrix,
-     deny /usr/bin/chsh lrwx,
-   }
-
 }

@@ -3,7 +3,7 @@
 class bastion_host::profiles::auditshell(
 	$file_download_base = 'https://raw.githubusercontent.com/scoopex/scriptreplay_ng/audit-shell/',
 ){
-    ensure_packages([ 'bsdutils', 'apparmor-utils', 'dialog' , 'perl-doc' , 'libterm-readkey-perl' ])
+    ensure_packages([ 'bsdutils', 'apparmor-utils', 'perl-doc' , 'libterm-readkey-perl' ])
 
     file { '/var/log/auditshell/':
       ensure  => 'directory',
@@ -51,6 +51,17 @@ class bastion_host::profiles::auditshell(
     exec { '/usr/sbin/aa-enforce /usr/local/bin/auditshell':
       user        => 'root',
       refreshonly => true,
-      path        => [ '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/sbin' ],
     }
+
+		file{'/etc/apparmor.d/usr.local.bin.auditshell-sessions':
+      owner  => 'root',
+      group  => 'root',
+		 	mode   => '0640',
+      source => 'puppet:///modules/bastion_host/usr.local.bin.auditshell-sessions',
+		}->
+    exec { '/usr/sbin/aa-enforce /usr/local/bin/auditshell-sessions':
+      user        => 'root',
+      refreshonly => true,
+    }
+
 }
