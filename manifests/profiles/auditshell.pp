@@ -35,24 +35,18 @@ class bastion_host::profiles::auditshell(
 		 	mode  => '0755',
 		}
 
-		exec{'/usr/local/bin/auditshell':
-		 	command => "/usr/bin/wget -q ${file_download_base}/helpers/auditshell -O /usr/local/bin/auditshell",
-		 	creates => '/usr/local/bin/auditshell',
-		}->
 		file{'/usr/local/bin/auditshell':
-      owner => 'root',
-      group => 'root',
-		 	mode  => '0755',
-		}
+      owner  => 'root',
+      group  => 'root',
+		 	mode   => '0755',
+      source => 'puppet:///modules/bastion_host/auditshell',
+    }
 
-		exec{'/etc/apparmor.d/usr.local.bin.auditshell':
-		 	command => "/usr/bin/wget -q ${file_download_base}/helpers/usr.local.bin.auditshell -O /etc/apparmor.d/usr.local.bin.auditshell",
-		 	creates => '/etc/apparmor.d/usr.local.bin.auditshell',
-		}->
 		file{'/etc/apparmor.d/usr.local.bin.auditshell':
-      owner => 'root',
-      group => 'root',
-		 	mode  => '0640',
+      owner  => 'root',
+      group  => 'root',
+		 	mode   => '0640',
+      source => 'puppet:///modules/bastion_host/usr.local.bin.auditshell',
 		}->
     exec { '/usr/sbin/aa-enforce /usr/local/bin/auditshell':
       user        => 'root',

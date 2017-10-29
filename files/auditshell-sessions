@@ -26,9 +26,8 @@ list_sessions(){
     if ( ! [ -d "$dir" ] );then
        continue
     fi 
-    if ( ! ( ls -1 $NAME/timing.*  $NAME/typescript.* &>/dev/null ) );then
+    if ( ls -1 $NAME/timing.*  $NAME/typescript.* &>/dev/null );then
        echo "$dir"
-       break
     fi 
   done
   shopt -u nullglob
@@ -36,6 +35,12 @@ list_sessions(){
 
 show_session(){
      local NAME="$1"
+   
+     if [ "$AUDITSHELL" = "$NAME" ];then
+        echo "ERROR: CANNOT SHOW A ALREADY RUNNING SESSION"
+        exit 1
+     fi
+
      if ( ! (echo "$NAME"|grep -P "^[0-9a-zA-Z_\-][0-9a-zA-Z_\-\.]*$"));then
         echo "ERROR: NOT ALLOWED CHARACTERS"
         exit 1
@@ -75,6 +80,6 @@ case "$ACTION" in
         show_session "$SESSION"
         ;;
   *)
-        echo "Usage: $0 {list|replay <session>}"
+        echo "Usage: $0 {list|show <session>}"
         exit 1
 esac
