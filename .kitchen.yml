@@ -10,7 +10,7 @@ provisioner:
   manifests_path: manifests
   manifest: local.pp
   modules_path: modules
-  hiera_data_path: hieradata
+  hiera_data_path: data
   hiera_deep_merge: true
   puppet_verbose: true
   puppet_debug: false
