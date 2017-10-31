@@ -47,10 +47,11 @@ class bastion_host::profiles::auditshell(
       group  => 'root',
 		 	mode   => '0640',
       source => 'puppet:///modules/bastion_host/usr.local.bin.auditshell',
-		}->
+		}
     exec { '/usr/sbin/aa-enforce /usr/local/bin/auditshell':
       user        => 'root',
       refreshonly => true,
+      subscribe   => File['/etc/apparmor.d/usr.local.bin.auditshell'],
     }
 
 		file{'/etc/apparmor.d/usr.local.bin.auditshell-sessions':
@@ -58,10 +59,11 @@ class bastion_host::profiles::auditshell(
       group  => 'root',
 		 	mode   => '0640',
       source => 'puppet:///modules/bastion_host/usr.local.bin.auditshell-sessions',
-		}->
+		}
     exec { '/usr/sbin/aa-enforce /usr/local/bin/auditshell-sessions':
       user        => 'root',
       refreshonly => true,
+      subscribe   => File['/etc/apparmor.d/usr.local.bin.auditshell-sessions'],
     }
 
 }
