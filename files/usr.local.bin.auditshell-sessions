@@ -1,0 +1,26 @@
+#include <tunables/global>
+
+/usr/local/bin/auditshell-sessions {
+  #include <abstractions/base>
+  #include <abstractions/bash>
+
+  / r,
+  /bin/bash ix,
+  /bin/grep rix,
+  /dev/ rw,
+  /dev/** rw,
+  /etc/group r,
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
+  /usr/bin/clear rix,
+  /usr/bin/env rix,
+  /usr/bin/groups rix,
+  /usr/bin/perl rix,
+  /usr/bin/whoami rix,
+  /usr/local/bin/auditshell-sessions r,
+  /usr/local/bin/scriptreplay rix,
+  /usr/share/perl/ r,
+  /usr/share/perl/** r,
+  /var/log/auditshell/ r,
+  /var/log/auditshell/** r,
+}
