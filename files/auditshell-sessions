@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 #################################################################################
 ####
 #### HELPERS
@@ -26,8 +25,15 @@ list_sessions(){
     if ( ! [ -d "$dir" ] );then
        continue
     fi 
-    if ( ls -1 $NAME/timing.*  $NAME/typescript.* &>/dev/null );then
-       echo "$dir"
+    if ( ls -1tr $NAME/timing.*  $NAME/typescript.* &>/dev/null );then
+      lsof $NAME/typescript.* >/dev/null 2>&1
+      RET="$?"
+      if [ "$RET" = "0" ];then
+         RUN_STATE="complete"
+      else
+         RUN_STATE="running"
+      fi
+      printf "%-45s %s\n" "$dir" "$RUN_STATE"
     fi 
   done
   shopt -u nullglob
@@ -41,10 +47,6 @@ show_session(){
         exit 1
      fi
 
-     if ( ! (echo "$NAME"|grep -P "^[0-9a-zA-Z_\-][0-9a-zA-Z_\-\.]*$"));then
-        echo "ERROR: NOT ALLOWED CHARACTERS"
-        exit 1
-     fi
      shopt -s nullglob
      if ( ! ls -1 $(get_glob)|grep -q "$NAME" );then
         echo "ERROR: NOT ALLOWED, YOU ARE NOT MEMBER OF THE >>auditshell<< GROUP"
@@ -65,6 +67,17 @@ show_session(){
 
 ACTION="$1"
 SESSION="$2"
+
+if ( ! (echo "$ACTION"|grep -q -P '^(list|show|)$'));then
+   echo "ERROR: NOT ALLOWED PARAMETER"
+   exit 1
+fi
+
+
+if ( ! (echo "$SESSION"|grep -q -P "^[0-9a-zA-Z_\-\.]*$"));then
+   echo "ERROR: NOT ALLOWED CHARACTERS"
+   exit 1
+fi
 
 cd /var/log/auditshell
 if [ "$?" != "0" ];then
