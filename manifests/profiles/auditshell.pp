@@ -42,6 +42,20 @@ class bastion_host::profiles::auditshell(
       source => 'puppet:///modules/bastion_host/auditshell',
     }
 
+		file{'/usr/local/bin/auditshell-maintain':
+      owner  => 'root',
+      group  => 'root',
+		 	mode   => '0755',
+      source => 'puppet:///modules/bastion_host/auditshell-maintain',
+    }
+
+		file{'/etc/cron.d/auditshell':
+      owner   => 'root',
+      group   => 'root',
+		 	mode    => '0755',
+      content =>"*/15 * * * root ionice -c3 nice -n 20 /usr/local/bin/auditshell-maintain 2>&1|logger -t auditshell"
+    }
+
 		file{'/etc/apparmor.d/usr.local.bin.auditshell':
       owner  => 'root',
       group  => 'root',

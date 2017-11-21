@@ -9,7 +9,6 @@
    /**           lrwix,
 
    /bin/bash    cx,
-   /usr/local/bin/auditshell-sessions    Px,
 
    profile /bin/bash {
      #include <abstractions/base>
@@ -29,6 +28,8 @@
      deny /usr/bin/chsh lrwx,
      deny /var/log/auditshell/  lrwx,
      deny /var/log/auditshell/**  lrwx,
+
+     /usr/local/bin/auditshell-sessions cux,
 
 
      #include <abstractions/dbus-strict>

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+while read A;
+do
+   lsof "$A" >/dev/null 2>&1
+   RET="$?"
+   if [ "$RET" = "0" ];then
+      gzip -6 --verbose "$A"
+   fi
+done <  <(find /var/log/auditshell/ -type f ! -name "*.gz")
+
