@@ -12,7 +12,7 @@ log_action(){
    shift
    local MSG="$@"
    logger -t auditshell.${TYPE} <<< "${MSG}"
-   printf "%s %s/%s | %s\n" "$(date --date="today" "+%Y-%m-%d %H:%M:%S")" "$TYPE" "$(whoami)" "$MSG" >> $REMOTE_ACTIONS_LOG_FILE
+   printf "%s %s[%s] | %s\n" "$(date --date="today" "+%Y-%m-%d %H:%M:%S")" "$TYPE" "$(whoami)" "$MSG" >> $REMOTE_ACTIONS_LOG_FILE
 }
 
 ###################################################################################################
@@ -42,11 +42,11 @@ if [ "$RET" != "0" ];then
 fi 
 
 # This is a file transfer, no audit shell neccessary
-if (echo "$@"|egrep -q "^-c.*scp.*$");then
+if (echo "$@"|grep -q -P '^.*-c (scp|rsync) .*$');then
  log_action filetransfer "/bin/sh $@"
  exec /bin/sh "$@"
 # Remote command execution
-elif (echo "$@"|egrep -q "^-c.*$");then
+elif (echo "$@"|grep -q -P '^.*-c .*$');then
  log_action remotecommand "/bin/bash $@"
  exec /bin/bash "$@"
 fi

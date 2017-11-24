@@ -6,7 +6,7 @@ This project based on https://github.com/scoopex/puppet-bastion_host
 This puppet project template provides the following aspects:
 
   * a security hardened openssh server setup
-  * audit shell which logs all executions shell interaction and remote command execution
+  * a audit shell which logs all executions shell interaction, scp and rsync file transfers and remote command execution
   * forbid auditshell users to modify and read the auditshell logs
   * review previous shell sessions by a reimplementaion of "scriptreplay"
 

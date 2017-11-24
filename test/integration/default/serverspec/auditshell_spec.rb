@@ -49,7 +49,9 @@ describe command('scp -i /home/testuser/.ssh/id_rsa -o StrictHostKeyChecking=no 
   its(:exit_status) { should eq 0 }
 end
 
-describe command('touch stamp; screen -mdS test bash -c "timeout -k 1 2 ssh -o StrictHostKeyChecking=no -i /home/testuser/.ssh/id_rsa testuser@localhost"; sleep 1;find /var/log/auditshell/sessions -type f -newer stamp') do
+describe command('touch stamp; screen -mdS test bash -c '+
+                 '"timeout -k 1 2 ssh -o StrictHostKeyChecking=no -i /home/testuser/.ssh/id_rsa testuser@localhost"; '+
+                 'sleep 1;find /var/log/auditshell/sessions -type f -newer stamp') do
    its(:stdout) { should match(/typescript.*testuser.*/) }
    its(:stdout) { should match(/timing.*testuser.*/) }
 end
