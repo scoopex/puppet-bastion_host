@@ -5,7 +5,7 @@ class bastion_host::profiles::auditshell(
 ){
     ensure_packages([ 'bsdutils', 'apparmor-utils', 'perl-doc' , 'libterm-readkey-perl' ])
 
-    file { '/var/log/auditshell/':
+    file { [ '/var/log/auditshell/', '/var/log/auditshell/sessions', '/var/log/auditshell/actions' ]:
       ensure  => 'directory',
       owner   => 'root',
       group   => 'root',

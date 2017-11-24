@@ -7,5 +7,5 @@ do
    if [ "$RET" = "0" ];then
       gzip -6 --verbose "$A"
    fi
-done <  <(find /var/log/auditshell/ -type f ! -name "*.gz")
+done <  <(find /var/log/auditshell/sessions -type f ! -name "*.gz")
 

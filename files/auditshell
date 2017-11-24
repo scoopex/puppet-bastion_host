@@ -1,36 +1,55 @@
 #!/bin/bash -l
 
+#export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]-*no-function*}: '
+# set -x 
+
+###################################################################################################
+####
+#### HELPERS
+
+log_action(){
+   local TYPE="$1"
+   shift
+   local MSG="$@"
+   logger -t auditshell.${TYPE} <<< "${MSG}"
+   printf "%s %s/%s | %s\n" "$(date --date="today" "+%Y-%m-%d %H:%M:%S")" "$TYPE" "$(whoami)" "$MSG" >> $REMOTE_ACTIONS_LOG_FILE
+}
+
+###################################################################################################
+####
+#### MAIN
+
 IDENT="`date --date="today" "+%Y-%m-%d_%H-%M-%S"`.`whoami`.$$"
 
-LOGDIR="/var/log/auditshell/${IDENT}"
-TYPESCRIPT="${LOGDIR}/typescript.${IDENT}"
-TIMING="${LOGDIR}/timing.${IDENT}"
+SESSION_TRACE_DIR="/var/log/auditshell/sessions/${IDENT}"
+REMOTE_ACTIONS_LOG_FILE="/var/log/auditshell/actions/actions_`date --date="today" "+%Y-%m-%d"`.log"
 
+TYPESCRIPT="${SESSION_TRACE_DIR}/typescript.${IDENT}"
+TIMING="${SESSION_TRACE_DIR}/timing.${IDENT}"
+umask 0077
 
-# This is a file transfer, no audit shell neccessary
-if (echo "$@"|egrep -q "^-c.*scp.*$");then
- logger -t auditshell.filetransfer.${IDENT} <<< "/bin/sh $@"
- exec /bin/sh "$@"
-# Remote command execution
-elif (echo "$@"|egrep -q "^-c.*$");then
- logger -t auditshell.remotecommand.${IDENT} <<< "/bin/bash $@"
- exec /bin/bash "$@"
-fi
-
-
-if [ "$AUDITSHELL" ];then
+if [ -n "$AUDITSHELL" ];then
    echo "INFO: already in a auditshell session"
    exit 1
 fi
+export AUDITSHELL="$IDENT"
 
-mkdir $LOGDIR
+mkdir -p $SESSION_TRACE_DIR
 RET="$?"
 if [ "$RET" != "0" ];then
-   echo "ERROR: Creation of dir '$LOGDIR' failed, exitcode $RET"
+   echo "ERROR: Creation of dir '$SESSION_TRACE_DIR' failed, exitcode $RET"
    exit 1
 fi 
 
-export SHELL=/bin/bash
+# This is a file transfer, no audit shell neccessary
+if (echo "$@"|egrep -q "^-c.*scp.*$");then
+ log_action filetransfer "/bin/sh $@"
+ exec /bin/sh "$@"
+# Remote command execution
+elif (echo "$@"|egrep -q "^-c.*$");then
+ log_action remotecommand "/bin/bash $@"
+ exec /bin/bash "$@"
+fi
 
 cat <<EOF
     _   _   _ ____ ___ _____ ____  _   _ _____ _     _     
@@ -46,10 +65,10 @@ AUDIT KEY: $IDENT
 
 EOF
 
-export AUDITSHELL="$IDENT"
-umask 0077
-logger -t auditshell.session.${IDENT} <<< "Starting auditshell session for user $USER"
+log_action session "${IDENT} => Starting auditshell session for user $USER"
+export SHELL=/bin/bash
 script -f -e -q --timing=$TIMING $TYPESCRIPT -c "/bin/bash -l"
-logger -t auditshell.session.${IDENT} <<< "Finished auditshell session for user $USER"
-
+RET="$?"
+log_action session "${IDENT} => Finished auditshell session by user termination for user $USER, exitcode $RET"
 echo "AUDITSHELL FINISHED"
+exit $RET

@@ -79,7 +79,7 @@ if ( ! (echo "$SESSION"|grep -q -P "^[0-9a-zA-Z_\-\.]*$"));then
    exit 1
 fi
 
-cd /var/log/auditshell
+cd /var/log/auditshell/sessions/
 if [ "$?" != "0" ];then
    echo "ERROR: unable to enter dir /var/log/auditshell"
    exit 1
