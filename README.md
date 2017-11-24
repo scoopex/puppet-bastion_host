@@ -5,9 +5,19 @@ This project based on https://github.com/scoopex/puppet-bastion_host
 
 This puppet project template provides the following aspects:
 
-  * puppet template with demo code which installs a lighthttpd
-  * convenient development environment which downloads and creates a ubuntu xenial image in a virtualbox environment
-  * serverspec tests are executed in the environment
+  * a security hardened openssh server setup
+  * audit shell which logs all executions shell interaction and remote command execution
+  * forbid auditshell users to modify and read the auditshell logs
+  * review previous shell sessions by a reimplementaion of "scriptreplay"
+
+Usage
+-----
+
+  * Add users with /usr/local/bin/auditshell" as user shell to log their sessions
+  * Add administrative users with the group "auditshell" to give them the ability to review the shell sessions of other users
+  * Review shell sessions using the script "auditshell-sessions"<BR>
+    (check "perldoc /usr/local/bin/auditshell" for hotkeys how to user the replay feature)
+ 
 
 Installation of the test environment
 ------------------------------------
