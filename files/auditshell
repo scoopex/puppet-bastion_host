@@ -42,11 +42,19 @@ if [ "$RET" != "0" ];then
 fi 
 
 # This is a file transfer, no audit shell neccessary
-if (echo "$@"|grep -q -P '^.*-c (scp|rsync) .*$');then
+if (echo "$@"|grep -q -P '^-c (scp|rsync) .*$');then
  log_action filetransfer "/bin/sh $@"
  exec /bin/sh "$@"
+elif (echo "$@"|grep -q -P '^-c mosh-server .*$');then
+ ARGV=$@
+ ARGV+=("'--'")
+ ARGV+=("'/usr/local/bin/auditshell'")
+ log_action mosh "$@ ==> ${ARGV[@]}"
+ # -c mosh-server 'new' '-c' '8' '-s' '-l' 'LANG=en_US.UTF-8' '--' '/usr/local/bin/auditshell'
+ unset AUDITSHELL
+ exec /bin/bash ${ARGV[@]}
 # Remote command execution
-elif (echo "$@"|grep -q -P '^.*-c .*$');then
+elif (echo "$@"|grep -q -P '^-c .*$');then
  log_action remotecommand "/bin/bash $@"
  exec /bin/bash "$@"
 fi
@@ -67,6 +75,7 @@ EOF
 
 log_action session "${IDENT} => Starting auditshell session for user $USER"
 export SHELL=/bin/bash
+
 script -f -e -q --timing=$TIMING $TYPESCRIPT -c "/bin/bash -l"
 RET="$?"
 log_action session "${IDENT} => Finished auditshell session by user termination for user $USER, exitcode $RET"

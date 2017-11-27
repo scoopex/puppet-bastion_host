@@ -56,6 +56,14 @@ describe command('touch stamp; screen -mdS test bash -c '+
    its(:stdout) { should match(/timing.*testuser.*/) }
 end
 
+describe command('touch stamp; screen -mdS test bash -c '+
+                 '"timeout -k 1 2 \'mosh --ssh ssh -o StrictHostKeyChecking=no\' -i /home/testuser/.ssh/id_rsa testuser@localhost"; '+
+                 'sleep 1;find /var/log/auditshell/sessions -type f -newer stamp') do
+   its(:stdout) { should match(/typescript.*testuser.*/) }
+   its(:stdout) { should match(/timing.*testuser.*/) }
+end
+
+
 
 #----------------------------------------------------------------------
 
