@@ -13,7 +13,7 @@ This puppet project template provides the following aspects:
 Usage
 -----
 
-  * Add users with /usr/local/bin/auditshell" as user shell to log their sessions
+  * Add users with "/usr/local/bin/auditshell" as user shell to log their sessions
   * Add administrative users with the group "auditshell" to give them the ability to review the shell sessions of other users
   * Review shell sessions using the script "auditshell-sessions"<BR>
     (check "perldoc /usr/local/bin/auditshell" for hotkeys how to user the replay feature)
